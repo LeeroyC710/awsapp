@@ -51,8 +51,8 @@
       update_cache: true
   - name: "nginx configuration"
     copy:
-      src: ./nginx.conf
-      dest: /etc/nginx/nginx.conf
+      src: ./nginx
+      dest: ./awsapp/nginx/nginx.conf
       owner: root
       group: root
       mode: 0644
@@ -66,4 +66,68 @@
     git:
       repo: "https://github.com/LeeroyC710/awsapp.git"
       dest: "/opt/awsapp"
-      force: yes
+      force: yes 
+  - name: docker-prerequisites
+    apt:
+      pkg:
+      - apt-transport-https   
+      - ca-certificates
+      - curl
+      - gnupg2
+      - software-properties-common
+      - python3-pip
+      - python-pip
+      - git
+      state: latest
+      update_cache: true
+  - name: docker
+    pip:
+      name: docker
+  - name: json
+    pip:
+      name: jsondiff
+  - name: yaml
+    pip:
+      name: pyyaml
+  - name: compose
+    pip:
+      name: docker-compose   
+  - name: Docker GPG key
+    apt_key: 
+      url: "https://download.docker.com/linux/ubuntu/gpg"
+      state: present
+  - name: Docker repository
+    apt_repository:
+      repo: "deb [arch=amd64] https://download.docker.com/linux/debian stretch stable"
+      state: present
+      update_cache: true
+  - name: Docker install
+    apt:
+      pkg:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      state: latest
+      update_cache: true
+  - name: docker service
+    service:
+      name: docker
+      state: started   
+  - name: docker group
+    shell: usermod -aG docker $(whoami)
+  - name: pip install for docker
+    apt:
+      name: python-pip
+      state: latest
+      update_cache: true
+  - name: pip install docker sdk
+    pip:
+      name: docker
+  - name: docker create registry container
+    docker_container:
+      name: registry
+      image: registry
+      ports:
+      - "5000:5000"
+  - name: install docker compose
+    shell: curl https://raw.githubusercontent.com/TomLLew/Scripts/master/Docker-Install-Script.sh | sudo bash

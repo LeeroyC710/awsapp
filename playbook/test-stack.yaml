@@ -1,0 +1,35 @@
+Resources:
+  Instance1:
+    Type: AWS::EC2::Instance
+    Properties:
+      KeyName: CloudFormationKeyPair
+      ImageId: ami-006a0174c6c25ac06
+      InstanceType: t2.micro
+      Tags:
+        - Key: "CloudFormation"
+          Value: "CDF"
+      SecurityGroups:
+        - !Ref AllowSSH
+        - !Ref AllowHTTP
+
+  AllowSSH:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Enable SSH access
+      SecurityGroupIngress:
+        IpProtocol: tcp
+        FromPort: '22'
+        ToPort: '22'
+        CidrIp: 0.0.0.0/0
+
+  AllowHTTP:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Enable HTTP access
+      SecurityGroupIngress:
+        IpProtocol: tcp
+        FromPort: '80'
+        ToPort: '80'
+        CidrIp: 0.0.0.0/0
+
+
