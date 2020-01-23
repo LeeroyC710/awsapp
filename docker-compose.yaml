@@ -1,5 +1,4 @@
-
-version: '3.7'
+version: '3.3'
 services:
     nginx:
       image: nginx:latest
@@ -23,12 +22,6 @@ services:
         - target: 5000
           published: 5000
           protocol: tcp
-      environment:
-        - MYSQL_USER=${MYSQL_USER}
-        - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-        - MYSQL_IP=${MYSQL_IP}
-        - MYSQL_DB=${MYSQL_DB}
-        - SECRET_KEY=${SECRET_KEY} 
     service1:
        build:
         context: ./service1
