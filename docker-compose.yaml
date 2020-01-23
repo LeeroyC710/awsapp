@@ -12,7 +12,10 @@ services:
         - type: bind
           source: ./nginx/nginx.conf
           target: /etc/nginx/nginx.conf
-
+      environment:
+        - AWS_XRAY_TRACING_NAME=myapp
+        - AWS_XRAY_DAEMON_ADDRESS=x-ray:2000
+        - AWS_XRAY_DEBUG_MODE="true"
     app:
       image: flask:latest
       build: 
@@ -34,6 +37,10 @@ services:
        build:
         context: ./service3
         dockerfile: ../Dockerfile
-
+    x-ray:
+       container_name: x-ray
+       image: amazon/aws-xray-daemon:latest
+       ports:
+        - "0:2000/udp"
 
 
