@@ -131,3 +131,20 @@
       - "5000:5000"
   - name: install docker compose
     shell: curl https://raw.githubusercontent.com/TomLLew/Scripts/master/Docker-Install-Script.sh | sudo bash
+
+#_______________________________________________API GATEWAY SET-UP__________________________________________________
+# Update API resources for development
+#- name: update API
+# aws_api_gateway:
+#    api_id: 'abc123321cba'
+#    state: present
+#    swagger_file: my_api.yml
+
+#_______________________________________update definitions and deploy API to production__________________________________
+#- name: deploy API
+#  aws_api_gateway:
+#    api_id: 'abc123321cba'
+#    state: present
+#    swagger_file: my_api.yml
+#    stage: production
+#    deploy_desc: Make auth fix available.

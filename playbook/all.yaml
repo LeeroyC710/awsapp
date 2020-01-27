@@ -1,0 +1,4 @@
+- import_playbook: create.yaml
+- import_playbook: autoScalingGroup.yaml
+- import_playbook: eloadBalancer.yaml
+- import_playbook: test-stack.yaml

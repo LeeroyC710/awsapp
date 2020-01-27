@@ -1,0 +1,36 @@
+
+AutoScalingGroup1:
+  UpdatePolicy:
+    AutoScalingRollingUpdate:
+      MinInstancesInService: '1'
+      MaxBatchSize: '1'
+      PauseTime: PT12M5S
+  Type: AWS::AutoScaling::AutoScalingGroup
+  Properties:
+    AvailabilityZones:
+      Fn::GetAZs:
+        Ref: AWS::Region
+    LaunchConfigurationName:
+      Ref: ASLC
+    MaxSize: '2'
+    MinSize: '1'
+MyServerGroup:
+  Type: AWS::AutoScaling::AutoScalingGroup
+  Properties:
+    AvailabilityZones:
+      Fn::GetAZs: ''
+    LaunchConfigurationName:
+      Ref: SimpleConfig
+    MinSize: '1'
+    MaxSize: '2'
+    LoadBalancerNames:
+    - Ref: leeroyLB
+    DesiredCapacity: '1'
+    NotificationConfigurations:
+    - TopicARN:
+        Ref: topic1
+      NotificationTypes:
+      - autoscaling:EC2_INSTANCE_LAUNCH
+      - autoscaling:EC2_INSTANCE_LAUNCH_ERROR
+      - autoscaling:EC2_INSTANCE_TERMINATE
+      - autoscaling:EC2_INSTANCE_TERMINATE_ERROR

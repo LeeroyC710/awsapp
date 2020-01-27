@@ -1,0 +1,19 @@
+MyLoadBalancer:
+  Type: AWS::ElasticLoadBalancing::LoadBalancer
+  Properties:
+    AvailabilityZones:
+    - "eu-west-2"
+    Instances:
+    - Ref: ProgressWeek::EC2::Instance resource 1
+    - Ref: ProgressWeek::EC2::Instance resource 2
+    Listeners:
+    - LoadBalancerPort: '80'
+      InstancePort: '80'
+      Protocol: HTTP
+    HealthCheck:
+      Target: HTTP:80/
+      HealthyThreshold: '3'
+      UnhealthyThreshold: '5'
+      Interval: '30'
+      Timeout: '5'
+
