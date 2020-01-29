@@ -1,0 +1,11 @@
+- hosts: localhost
+  connection: local
+  tasks:
+  - name: 'build image'
+    docker_image:
+      build:
+        path: "build-{{ lookup('env', 'BUILD_NUMBER') }}"
+        name:
+      tag: "{{ lookup('env', 'IMAGE_TAG') }}"
+      source: build
+      push: true

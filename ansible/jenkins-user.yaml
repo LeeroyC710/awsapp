@@ -1,0 +1,10 @@
+- hosts: localhost
+  become: true
+  tasks:
+  - name: jenkins user
+    user:
+      name: jenkins
+      groups: 
+      - docker
+      append: true
+      shell: /bin/bash

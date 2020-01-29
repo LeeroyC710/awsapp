@@ -1,0 +1,38 @@
+- hosts: localhost
+  become: true
+  tasks:
+  - name: install java
+    apt:
+      name: openjdk-8-jdk
+      state: latest
+  - name: jenkins gpg key
+    apt_key:
+      url: "https://pkg.jenkins.io/debian/jenkins.io.key"
+      state: present
+  - name: jenkins apt repo
+    apt_repository:
+      repo: "deb http://pkg.jenkins.io/debian-stable binary/"
+      state: present
+  - name: jenkins install
+    apt:
+      name: jenkins
+      state: latest
+      update_cache: true
+  - name: jenkins service
+    service:
+      name: jenkins
+      state: started
+  - name: "python pip"
+    apt:
+      name: python-pip
+      state: latest
+      update_cache: true
+- hosts: localhost
+  become: true
+  tasks:
+  - shell: |
+      chmod 777 /var/lib/jenkins/secrets/initialAdminPassword    
+      cat /var/lib/jenkins/secrets/initialAdminPassword
+    register: shell_result
+  - debug:
+      var: shell_result.stdout_lines

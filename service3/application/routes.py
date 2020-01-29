@@ -43,3 +43,19 @@ def dare_generator():
             return {"d0":"Number: 3, Letter: A, Dare: Have two shots of vodka"}
         else:  
             return {"d0":"Number: 3, Letter: D, Dare: Have an arm-wrestling with the person sitting next to you!"}
+
+'''@app.route('/', methods=['GET', 'POST'])
+def colour_generator(): 
+    if request.method == 'POST': 
+        data = {"letter":"none"}
+        random_letter = requests.post('http://service2:5002').json()
+        data['letter'] = random_letter['letter']
+       
+        if data['letter'] == 'a':
+            return {"c0":"letter: A, Colour: Red"}
+        elif data {'letter'] == 'b':
+            return {"c0":"letter: B, Colour: Blue"}
+        elif data {'letter'] == 'c':
+            return {"c0":"letter: C, Colour: Black"}
+        elif data {'letter'] == 'd':
+            return {"c0":"letter: D, Colour: Yellow"}'''

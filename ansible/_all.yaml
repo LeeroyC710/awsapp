@@ -1,0 +1,4 @@
+- import_playbook: docker.yaml
+- import_playbook: jenkins-user.yaml
+- import_playbook: jenkins.yaml
+#- import_playbook: re-dock.yaml

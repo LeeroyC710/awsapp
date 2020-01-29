@@ -1,0 +1,48 @@
+apiVersion: v1
+kind: Deployment
+metadata:
+  name: awsapp
+  labels: 
+    app: awsapp
+spec:
+  replicas: 3 
+  selector: 
+     matchLabels:  
+        app: awsapp 
+  template:
+    metadata:
+      labels: 
+        app: awsapp
+    spec:
+      containers:
+        - name: awsapp
+          image: leeroychiweshe/awsapp:latest
+          ports: 
+          - containerPort: 9000
+          readinessProbe: 
+            httpGet:
+              path: /
+              port: 9000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: awsapp
+spec: 
+  selector: 
+    app: awsapp 
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 9000
+  type: LoadBalancer
+
+  name: config-data
+  image: busybox
+  command: ["echo","-n","{'address':'10.0.1.192:2379/db'}", ">","/data/config"]
+  volumeMounts:
+    - name: config-data
+      mountPath: /data
+  volumes:
+    - name: config-data
+      hostPath: {}

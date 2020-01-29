@@ -1,0 +1,90 @@
+- hosts: all
+  become: true
+  tasks:
+  - name: prerequisites
+    apt:
+      pkg:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gnupg2
+      - software-properties-common
+      state: latest
+      update_cache: true
+  - name: docker gpg key
+    apt_key:
+      url: "https://download.docker.com/linux/debian/gpg"
+      state: present
+  - name: docker apt repo
+    apt_repository:
+      repo: "deb [arch=amd64] https://download.docker.com/linux/debian stretch stable"
+      state: present
+  - name: docker install
+    apt:
+      pkg:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      state: latest
+      update_cache: true
+  - name: docker service
+    service:
+      name: docker
+      state: started
+  - name: "insecure registries"
+    copy:
+      src: /home/shalininarayan98/ansible/resources/daemon.json
+      dest: /etc/docker/daemon.json
+  - name: "reload docker"
+    service:
+      name: docker
+      state: restarted 
+- hosts: all
+  become: true
+  tasks:
+  - name: jenkins user
+    user:
+      name: jenkins
+      groups:
+      - docker
+      append: true
+      shell: /bin/bash
+
+- hosts: jenkins
+  become: true
+  tasks:
+  - name: install java
+    apt:
+      name: openjdk-8-jdk
+      state: latest
+  - name: jenkins gpg key
+    apt_key:
+      url: "https://pkg.jenkins.io/debian/jenkins.io.key"
+      state: present
+  - name: jenkins apt repo
+    apt_repository:
+      repo: "deb http://pkg.jenkins.io/debian-stable binary/"
+      state: present
+  - name: jenkins install
+    apt:
+      name: jenkins
+      state: latest
+      update_cache: true
+  - name: jenkins service
+    service:
+      name: jenkins
+      state: started
+  - name: "python pip"
+    apt:
+      name: python3-pip
+      state: present
+      update_cache: true
+  - pip:
+       name: docker
+  - name: "docker registry container"
+    docker_container:
+      name: registry
+      image: registry
+      ports:
+      - "5000:5000"
+
